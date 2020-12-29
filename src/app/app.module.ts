@@ -10,8 +10,17 @@ import { AppComponent } from './app.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 
 import { registerLocaleData } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
 
 registerLocaleData(localeFr, 'fr');
+
+const routes: Routes = [
+  {path: 'category/:id', component: ProductListComponent},
+  {path: 'category', component: ProductListComponent},
+  {path: 'products', component: ProductListComponent},
+  {path: '', redirectTo: '/products', pathMatch: 'full'},
+  {path: '**', redirectTo: '/products', pathMatch: 'full'},
+]
 
 @NgModule({
   declarations: [
@@ -20,9 +29,10 @@ registerLocaleData(localeFr, 'fr');
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    RouterModule.forRoot(routes)
   ],
   providers: [ProductService, {provide: LOCALE_ID, useValue: 'fr'}],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { } 
