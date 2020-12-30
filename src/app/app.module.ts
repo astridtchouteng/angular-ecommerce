@@ -11,12 +11,13 @@ import { ProductListComponent } from './components/product-list/product-list.com
 
 import { registerLocaleData } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { ProductCategoryMenuComponent } from './components/product-category-menu/product-category-menu.component';
 
 registerLocaleData(localeFr, 'fr');
 
 const routes: Routes = [
   {path: 'category/:id', component: ProductListComponent},
-  {path: 'category', component: ProductListComponent},
+  {path: 'category', component: ProductCategoryMenuComponent},
   {path: 'products', component: ProductListComponent},
   {path: '', redirectTo: '/products', pathMatch: 'full'},
   {path: '**', redirectTo: '/products', pathMatch: 'full'},
@@ -25,7 +26,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    ProductListComponent
+    ProductListComponent,
+    ProductCategoryMenuComponent
   ],
   imports: [
     BrowserModule,
