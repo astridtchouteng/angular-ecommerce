@@ -12,10 +12,12 @@ import { ProductListComponent } from './components/product-list/product-list.com
 import { registerLocaleData } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ProductCategoryMenuComponent } from './components/product-category-menu/product-category-menu.component';
+import { SearchComponent } from './components/search/search.component';
 
 registerLocaleData(localeFr, 'fr');
 
 const routes: Routes = [
+  {path: 'search/:keyword', component: ProductListComponent},
   {path: 'category/:id/:name', component: ProductListComponent},
   {path: 'category', component: ProductCategoryMenuComponent},
   {path: 'products', component: ProductListComponent},
@@ -27,7 +29,8 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     ProductListComponent,
-    ProductCategoryMenuComponent
+    ProductCategoryMenuComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

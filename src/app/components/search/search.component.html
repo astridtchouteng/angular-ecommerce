@@ -1,0 +1,15 @@
+<div class="form-header">
+
+    <!--listen for the enter key, call method in Angular code
+        myInput.value = the text the user typed in
+    -->
+    <input #myInput class="au-input au-input-xl"
+           type="text"
+           placeholder="Search for products ..." 
+           (keyup.enter) = "doSearch(myInput.value)" />
+
+    <button class="au-btn-submit" 
+            (click) = "doSearch(myInput.value)">
+        Search
+    </button>
+</div>
