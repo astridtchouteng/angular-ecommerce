@@ -16,7 +16,7 @@ import { ProductCategoryMenuComponent } from './components/product-category-menu
 registerLocaleData(localeFr, 'fr');
 
 const routes: Routes = [
-  {path: 'category/:id', component: ProductListComponent},
+  {path: 'category/:id/:name', component: ProductListComponent},
   {path: 'category', component: ProductCategoryMenuComponent},
   {path: 'products', component: ProductListComponent},
   {path: '', redirectTo: '/products', pathMatch: 'full'},
