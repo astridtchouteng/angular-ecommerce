@@ -13,6 +13,7 @@ import { registerLocaleData } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ProductCategoryMenuComponent } from './components/product-category-menu/product-category-menu.component';
 import { SearchComponent } from './components/search/search.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -35,7 +36,8 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     HttpClientModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    NgbModule
   ],
   providers: [ProductService, {provide: LOCALE_ID, useValue: 'fr'}],
   bootstrap: [AppComponent]
