@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CartService } from 'src/app/services/cart.service';
+import { PopulateFormService } from 'src/app/services/populate-form.service';
 
 @Component({
   selector: 'app-checkout',
@@ -13,8 +14,12 @@ export class CheckoutComponent implements OnInit {
   totalPrice: number = 0.0;
   totalQuantity: number = 0;
 
+  creditcardYears: number[] = [];
+  creditcardMonth: number[] = [];
+
   constructor(private formBuilder: FormBuilder,
-    private cartService: CartService) { }
+    private cartService: CartService,
+    private populateFormService: PopulateFormService) { }
 
   ngOnInit(): void {
     this.buildFormGroup();
@@ -61,6 +66,18 @@ export class CheckoutComponent implements OnInit {
       data => this.totalPrice = data
     )
     this.cartService.computeCartTotals();
+
+    // populate creadit card month
+    const startMonth: number = new Date().getMonth() + 1;
+
+    this.populateFormService.getMonths(startMonth).subscribe(
+      data => this.creditcardMonth = data
+    );
+
+    // populate credit card years
+    this.populateFormService.getYears().subscribe(
+      data => this.creditcardYears = data
+    );
   }
 
   onSubmit() {
@@ -76,7 +93,7 @@ export class CheckoutComponent implements OnInit {
             .setValue(this.checkoutFormGroup.controls.shippingAddress.value)
     }
     else {
-      // clear all the file in the billingAddress group
+      // clear all the form control in the billingAddress group
       this.checkoutFormGroup.controls.billingAddress.reset();
 
     }
