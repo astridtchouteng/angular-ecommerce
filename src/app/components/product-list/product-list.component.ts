@@ -47,14 +47,12 @@ export class ProductListComponent implements OnInit {
       this.searchMode = false;
       this.handleListProducts();
     }
-    
   }
 
   handleSearchProducts(theKeyword: string) {
 
     // if we have a different keyword than previous
     // then set thePageNumber to 1
-
     if (this.previousKeyword != theKeyword) {
       this.thePageNumber = 1;
     }
@@ -90,8 +88,6 @@ export class ProductListComponent implements OnInit {
 
     this.previousCategoryId = this.currentCategoryId;
 
-
-
     this.productService.getProductsListPaginate(this.thePageNumber - 1, this.thePageSize,
                                                 this.currentCategoryId)
                         .subscribe(this.processResult());
@@ -108,7 +104,6 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(product: Product) {
-
     const cartItem: CartItem = new CartItem(product);
     this.cartService.addToCart(cartItem);
 

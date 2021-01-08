@@ -23,12 +23,9 @@ export class CartService {
     // find the item in the cart based on the item id
     if(this.cartItems.length > 0) {
 
-      for(let item of this.cartItems) {
-        if (item.id === cartItem.id) {
-          existingCartItem = item;
-          break;
-        } 
-      }
+      // Array.find returns the forst element in an array
+      // returns undefined if it can't find the item
+      existingCartItem = this.cartItems.find(item => item.id === cartItem.id);
 
       // check if we found item
       alreadyExistsIncart = (existingCartItem != undefined)
@@ -56,8 +53,10 @@ export class CartService {
       totalQuantityValue += item.quantity;
     }
 
+    // publish the news values to all the subscribers
     this.totalPrice.next(totalPriceValue);
     this.totalQuantity.next(totalQuantityValue);
+
   }
 
 
