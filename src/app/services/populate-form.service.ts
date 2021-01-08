@@ -1,12 +1,19 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Country } from '../common/country';
+import { State } from '../common/state';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PopulateFormService {
 
-  constructor() { }
+  private countriesUrl = "http://localhost:8282/api/countries";
+  private statesUrl = "http://localhost:8282/api/states";
+
+  constructor(private httpClient: HttpClient) { }
 
   getMonths(startMonth: number): Observable<number[]> {
 
@@ -31,5 +38,35 @@ export class PopulateFormService {
     }
     return of(data);
 
+  }
+
+  getCountries(): Observable<Country[]> {
+    
+    return this.httpClient.get<GetResponseCountries>(this.countriesUrl).pipe(
+      map(response => response._embedded.countries)
+    );
+  }
+
+  getSatesByCountryCode(countryCode: string): Observable<State[]> {
+
+    const searchUrl= `${this.statesUrl}/search/findByCountryCode=${countryCode}`;
+    return this.httpClient.get<GetResponseState>(searchUrl).pipe(
+      map(response => response._embedded.states)
+    );
+  }
+
+
+}
+
+
+interface GetResponseCountries {
+  _embedded: {
+    countries: Country[];
+  }
+}
+
+interface GetResponseState {
+  _embedded: {
+    states: State[];
   }
 }
