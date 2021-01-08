@@ -59,5 +59,29 @@ export class CartService {
 
   }
 
+  decrementQuantity(cartItem: CartItem) {
+
+    // the cartItem is pass by reference
+    cartItem.quantity--;
+    if(cartItem.quantity == 0) {
+      this.removeItem(cartItem)
+    }
+    else {
+      this.computeCartTotals();
+    }
+
+  }
+
+  removeItem(cartItem: CartItem) {
+
+    let indexItem = this.cartItems.findIndex(
+      item => item.id === cartItem.id
+    )
+
+    if(indexItem > -1) {
+      this.cartItems.splice(indexItem, 1);
+    }
+  }
+
 
 }
