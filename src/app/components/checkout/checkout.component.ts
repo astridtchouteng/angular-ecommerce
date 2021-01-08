@@ -10,6 +10,8 @@ import { CartService } from 'src/app/services/cart.service';
 export class CheckoutComponent implements OnInit {
 
   checkoutFormGroup: FormGroup;
+  totalPrice: number = 0.0;
+  totalQuantity: number = 0;
 
   constructor(private formBuilder: FormBuilder,
     private cartService: CartService) { }
@@ -52,10 +54,18 @@ export class CheckoutComponent implements OnInit {
 
     });
 
+    this.cartService.totalQuantity.subscribe(
+      data => this.totalQuantity = data
+    );
+    this.cartService.totalPrice.subscribe(
+      data => this.totalPrice = data
+    )
     this.cartService.computeCartTotals();
   }
 
   onSubmit() {
+    console.log('Price ' + this.totalPrice);
+    console.log('Quantity ' + this.totalQuantity);
     console.log(this.checkoutFormGroup.get('customer').value);
   }
 
@@ -68,7 +78,6 @@ export class CheckoutComponent implements OnInit {
     else {
       // clear all the file in the billingAddress group
       this.checkoutFormGroup.controls.billingAddress.reset();
-
 
     }
   }
