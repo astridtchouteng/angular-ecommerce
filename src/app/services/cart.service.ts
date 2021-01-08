@@ -63,7 +63,7 @@ export class CartService {
 
     // the cartItem is pass by reference
     cartItem.quantity--;
-    if(cartItem.quantity == 0) {
+    if(cartItem.quantity === 0) {
       this.removeItem(cartItem)
     }
     else {
@@ -74,13 +74,17 @@ export class CartService {
 
   removeItem(cartItem: CartItem) {
 
-    let indexItem = this.cartItems.findIndex(
+    const indexItem = this.cartItems.findIndex(
       item => item.id === cartItem.id
-    )
+    );
 
+    // remoce item at the given index
     if(indexItem > -1) {
       this.cartItems.splice(indexItem, 1);
+      this.computeCartTotals();
     }
+
+
   }
 
 

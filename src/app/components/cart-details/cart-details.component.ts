@@ -50,4 +50,8 @@ export class CartDetailsComponent implements OnInit {
     console.log("quantity after " + cartItem.quantity);
   }
 
+  removeItem(cartItem: CartItem) {
+    this.cartService.removeItem(cartItem);
+  }
+
 }
