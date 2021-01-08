@@ -2,7 +2,7 @@ export class Product {
 
   id: string;
   sku: string;
-  namr: string;
+  name: string;
   description: string;
   unitPrice: number;
   imageUrl: string;
