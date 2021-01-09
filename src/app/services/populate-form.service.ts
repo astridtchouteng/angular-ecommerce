@@ -49,7 +49,7 @@ export class PopulateFormService {
 
   getSatesByCountryCode(countryCode: string): Observable<State[]> {
 
-    const searchUrl= `${this.statesUrl}/search/findByCountryCode=${countryCode}`;
+    const searchUrl= `${this.statesUrl}/search/findByCountryCode?code=${countryCode}`;
     return this.httpClient.get<GetResponseState>(searchUrl).pipe(
       map(response => response._embedded.states)
     );

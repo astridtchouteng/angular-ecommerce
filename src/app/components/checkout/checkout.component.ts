@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Country } from 'src/app/common/country';
+import { State } from 'src/app/common/state';
 import { CartService } from 'src/app/services/cart.service';
 import { PopulateFormService } from 'src/app/services/populate-form.service';
 
@@ -19,6 +20,9 @@ export class CheckoutComponent implements OnInit {
   creditcardMonth: number[] = [];
 
   countries: Country[] = [];
+
+  stateForShippingAddress: State[] = [];
+  stateForBillingAddress: State[] = [];
 
   constructor(private formBuilder: FormBuilder,
     private cartService: CartService,
@@ -128,6 +132,27 @@ export class CheckoutComponent implements OnInit {
     this.populateFormService.getMonths(startMonth).subscribe(
       data => this.creditcardMonth = data
     )
+  }
+
+  getState(nameFormGroup: string) {
+
+    const formGroup = this.checkoutFormGroup.get(nameFormGroup);
+
+    const countrycode = formGroup.value.country.code;
+
+    this.populateFormService.getSatesByCountryCode(countrycode).subscribe(
+      data => {
+
+        if(nameFormGroup === 'shippingAddress') {
+          this.stateForShippingAddress = data;
+        }
+        else {
+          this.stateForBillingAddress = data;
+        }
+
+        formGroup.get("state").setValue(data[0]);
+      }
+    );
   }
 
 }
