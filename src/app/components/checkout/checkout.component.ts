@@ -98,7 +98,26 @@ export class CheckoutComponent implements OnInit {
   onSubmit() {
     console.log('Price ' + this.totalPrice);
     console.log('Quantity ' + this.totalQuantity);
+
+    if( this.checkoutFormGroup.invalid) {
+      // touching all fields and triggers the display of the error messages
+      this.checkoutFormGroup.markAllAsTouched();
+    }
+
     console.log(this.checkoutFormGroup.get('customer').value);
+
+  }
+
+  get firstName() {
+    return this.checkoutFormGroup.get('customer.firstName');
+  }
+
+  get lastName() {
+    return this.checkoutFormGroup.get('customer.lastName');
+  }
+
+  get email() {
+    return this.checkoutFormGroup.get('customer.email');
   }
 
   copyShippingAddressToBillingAddress(event) {
