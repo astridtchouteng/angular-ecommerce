@@ -53,7 +53,7 @@
                         </div>
                         <div class="col-md-9">
                             <div class="input-space">
-                                <input formControlName="email" type ="email" />
+                                <input formControlName="email" type ="text" />
 
                                 <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-danger mt-1">
 
@@ -164,7 +164,7 @@
                                         Zip Code is required.
                                     </div>
                                     <div *ngIf="shippingAddressZipCode.errors.minlength">
-                                        Zip code must be at least 5 characters.
+                                        Zip code must be have 3 characters.
                                     </div>
                                 </div>
                             </div>
@@ -339,7 +339,7 @@
                                     </div>
 
                                     <div *ngIf="creditCardNumber.errors.pattern ">
-                                        Card Number must be 16 caractères.
+                                        Card Number must be have 16 caractères.
                                     </div>
                                 </div>
                             </div>
@@ -358,7 +358,7 @@
                                         Security code is required.
                                     </div>
                                     <div *ngIf="creditCardSecurityCode.errors.pattern ">
-                                        Security code must be 16 caractères.
+                                        Security code must be have 3 caractères.
                                     </div>
                                 </div>
                             </div>
@@ -400,7 +400,7 @@
                     <p>Total Quantity: {{ totalQuantity }}</p>
 
                     <p>Shipping: FREE!!</p>
-                    
+
                     <p>Total Price: {{ totalPrice | currency: 'EUR' }}</p>
                 </div>
 
