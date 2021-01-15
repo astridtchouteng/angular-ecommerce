@@ -1,8 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { CartItem } from 'src/app/common/cart-item';
 import { Country } from 'src/app/common/country';
+import { Customer } from 'src/app/common/customer';
+import { Order } from 'src/app/common/order';
+import { OrderItem } from 'src/app/common/order-item';
+import { Purchase } from 'src/app/common/purchase';
 import { State } from 'src/app/common/state';
 import { CartService } from 'src/app/services/cart.service';
+import { CheckoutService } from 'src/app/services/checkout.service';
 import { PopulateFormService } from 'src/app/services/populate-form.service';
 import { ShopValidator } from 'src/app/validators/shop-validator';
 
@@ -27,7 +34,9 @@ export class CheckoutComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private cartService: CartService,
-    private populateFormService: PopulateFormService) { }
+    private populateFormService: PopulateFormService,
+    private checkoutService: CheckoutService,
+    private  router: Router) { }
 
   ngOnInit(): void {
     this.buildFormGroup();
@@ -91,23 +100,88 @@ export class CheckoutComponent implements OnInit {
     // populate countries
     this.populateFormService.getCountries().subscribe(
       data => {
-        console.log("countries " + JSON.stringify(data));
         this.countries = data;
       } 
     )
   }
 
   onSubmit() {
-    console.log('Price ' + this.totalPrice);
-    console.log('Quantity ' + this.totalQuantity);
+    console.log("Submit your form");
 
     if( this.checkoutFormGroup.invalid) {
       // touching all fields and triggers the display of the error messages
       this.checkoutFormGroup.markAllAsTouched();
+      return;
     }
 
-    console.log(this.checkoutFormGroup.get('customer').value);
+    // set up order
+    let order: Order = new Order();
+    order.totalPrice = this.totalPrice;
+    order.totalQuantity = this.totalQuantity;
 
+    // get cart items
+    const cartItems: CartItem[] = this.cartService.cartItems;
+
+    // create orderItems from cartitems
+    let orderItems: OrderItem [] = cartItems.map( item => new OrderItem(item));
+
+    // set up purchase
+    let purchase: Purchase = new Purchase();
+
+    // populate purchase - customer
+    let customer: Customer = new Customer();
+    purchase.customer = this.checkoutFormGroup.controls['customer'].value;
+
+    // populate purchase - shipping address
+    purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
+    
+    // country and state are the array. We need to convert it object to pass it to Purchase DTO
+    const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state));
+    const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
+    purchase.shippingAddress.state = shippingState.name;
+    purchase.shippingAddress.country = shippingCountry.name;
+    
+    // populate purchase - billing address
+    purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
+
+    const billingState: State = JSON.parse(JSON.stringify(purchase.billingAddress.state));
+    const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country));
+    purchase.billingAddress.state = billingState.name;
+    purchase.billingAddress.country = billingCountry.name;
+
+    // populate purchase - order
+    purchase.order = order;
+
+    // populate puchase - orderItems
+    purchase.orderItems = orderItems;
+
+    // call checkout service
+    this.checkoutService.placeOrder(purchase).subscribe(
+      {
+        next: response => {
+          alert(`Your order has been received.\n Order tracking number: ${response.orderTrackingNumber}`)
+        
+          // resert cart
+          this.resertCart();
+        },
+        error: err => {
+          alert(`There was an error: ${err.message}`)
+        }
+      }
+    );
+
+  }
+
+
+  resertCart() {
+    this.cartService.cartItems = [];
+    this.cartService.totalPrice.next(0);
+    this.cartService.totalQuantity.next(0);
+
+    this.checkoutFormGroup.reset();
+
+    //navigate back to the products page
+    this.router.navigateByUrl("/products");
   }
 
   get firstName() { return this.checkoutFormGroup.get('customer.firstName');}
