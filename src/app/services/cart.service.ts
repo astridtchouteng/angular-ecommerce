@@ -9,10 +9,29 @@ export class CartService {
 
   cartItems: CartItem[] = [];
 
+  // reference to web browser's session storage
+  // once a web browser tab is closed, then data is no longer available
+  storage: Storage = sessionStorage;
+
+  // if you want to persist your data and survives once the browser if restarts, use local storage
+   // storage: Storage = localStorage
+
   totalPrice: Subject<number> = new Subject<number>();
   totalQuantity: Subject<number> = new Subject<number>();
 
-  constructor() { }
+  constructor() { 
+    // read data from storage
+
+    let data = JSON.parse(this.storage.getItem("cartItems"));
+
+    if(data != null) {
+      this.cartItems = data;
+
+      // compute totals based on the data that is read from storage
+
+      this.computeCartTotals;
+    }
+  }
 
   addToCart(cartItem: CartItem) {
 
@@ -57,6 +76,13 @@ export class CartService {
     this.totalPrice.next(totalPriceValue);
     this.totalQuantity.next(totalQuantityValue);
 
+    // persist cart data on my browser
+    this.persistCartItems();
+
+  }
+
+  persistCartItems() {
+    this.storage.setItem("cartItems", JSON.stringify(this.cartItems));
   }
 
   decrementQuantity(cartItem: CartItem) {
@@ -78,7 +104,7 @@ export class CartService {
       item => item.id === cartItem.id
     );
 
-    // remoce item at the given index
+    // remove item at the given index
     if(indexItem > -1) {
       this.cartItems.splice(indexItem, 1);
       this.computeCartTotals();
